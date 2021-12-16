@@ -175,70 +175,98 @@ class: title-slide
  
 # Introduction to Data Science
 
-## An interactive ecosystem for learning programming
+## An interactive system to learn programming
 
-### .smaller[Stéphane Guerrier, Data Analytics Lab, University of Geneva]
-### .smaller[Yuming Zhang, Data Analytics Lab, University of Geneva]
-### .smaller[Lionel Voirol, Data Analytics Lab, University of Geneva]
+### Stéphane Guerrier, Lionel Voirol and Yuming Zhang
+
+<br>
+
+### 16 December 2021
 
 <br>
 ```{R, out.width = "25%", echo = F, eval=F}
 include_graphics("pics/liscence.png")
 ```
 
+---
+
+# Teaching Assistants
+
+.pull-left[
+
+```{R, out.width = "90%", echo = F}
+include_graphics("pics/ming.png")
+```
+
+.center[.hi[Yuming Zhang]]
+
+.center[PhD student in Statistics, GSEM]
+]
+
+.pull-right[
+```{R, out.width = "90%", echo = F}
+include_graphics("pics/lio.png")
+```
+
+.center[.hi[Lionel Voirol]]
+
+.center[PhD student in Statistics, GSEM]
+]
 
 ---
-# The course and its objectives
 
-Last year, the course 
+# Course objectives
 
-
-
----
-# Ressources (1)
-
-The course is built around various resources:
-
-- An interactive ebook that cover the material discussed during the class.
-
-<div align="center">
-<iframe id="xaringan_ex"
-    title="xarigan slideshows example"
-    width="900"
-    height="400"
-    src="https://smac-group.github.io/ds/">
-</iframe>
-</div>
-
+- This course is intended to provide an .pink[introduction to data science] using the R language.
+- Designed for students of the GSEM (often their first programming experience).
+- This .pink[programming course] provides the students with notions of data management, manipulation, visualization and analytics (including basic statistical and machine learning methods).
+- Other topics such as literate programming, web applications, high performance computing and version control are also discussed. 
+- At the end of the class, the students realize a group project where they automatically extract data from the web and create an interactive web application to visualize/analyze their data.
 
 ---
-# Ressources (2)
 
-Educational video capsules
+# Course resources
 
-<div align="center">
-<iframe width="700" height="415" src="https://www.youtube.com/embed/0zlWcHDKCFw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
+.pull-left[
+.smallest[Website: slides and interactive exercises]
 
+.center[.smallest[[https://intro-to-ds.netlify.app](https://intro-to-ds.netlify.app)]]
+
+```{R, out.width = "90%", echo = F}
+include_graphics("pics/web.png")
+```
+
+
+]
+
+.pull-right[
+.smallest[Ebook: instructional videos and web apps]
+
+.center[.smallest[[https://smac-group.github.io/ds/](https://smac-group.github.io/ds/)]]
+
+<br>
+
+```{R, out.width = "100%", echo = F}
+include_graphics("pics/book.png")
+```
+
+]
 
 ---
-# Ressources (3)
 
-A website that proposes interactive programming exercises and quizz
+# Website - Lecture slides
 
-<div align="center">
-<iframe id="hike_inc"
-    title="hike_inc"
-    width="900"
-    height="440"
-    src="https://intro-to-ds.netlify.app/">
-</iframe>
-</div>
+.center[![](pics/join.gif)]
 
 ---
-# Ressources (4)
 
-Educational web applications
+# Website - Interactive exercises
+
+.center[![](pics/sig3.gif)]
+
+---
+
+# Web applications
 
 <div align="center">
 <iframe id="hike_inc"
@@ -249,11 +277,35 @@ Educational web applications
 </iframe>
 </div>
 
+.center[.smallest[[https://dal-unige.shinyapps.io/rmd_app/](https://dal-unige.shinyapps.io/rmd_app/)]]
 
 ---
-# Automatic customized mass mailing
 
-This is an example of a homework where students were required to create 
+# Ebook
+
+```{R, out.width = "90%", echo = F}
+include_graphics("pics/function.png")
+```
+
+.center[.smallest[[https://smac-group.github.io/ds/](https://smac-group.github.io/ds/)]]
+
+---
+
+# Ebook - Instructional videos
+
+<br>
+
+<div align="center">
+<iframe width="700" height="415" src="https://www.youtube.com/embed/0zlWcHDKCFw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+.center[.smallest[Video made by Justin Lee]]
+
+---
+
+# Students' work
+
+Example of homework (automatic customized mass mailing). 
 
 <div align="center">
 <iframe id="hike_inc"
@@ -264,18 +316,36 @@ This is an example of a homework where students were required to create
 </iframe>
 </div>
 
+---
+
+# Students' work
+
+```{R, out.width = "80%", echo = F}
+include_graphics("pics/hike.png")
+```
+
+.center[.smallest[[https://data-analytics-lab.shinyapps.io/hike_inc/](https://data-analytics-lab.shinyapps.io/hike_inc/)]]
 
 ---
-# Example of final project
 
-For their final project, the students ...
+# Future improvement for 2022
 
-<div align="center">
-<iframe id="hike_inc"
-    title="hike_inc"
-    width="900"
-    height="440"
-    src="https://data-analytics-lab.shinyapps.io/hike_inc/">
-</iframe>
-</div>
+- Develop additional materials on .pink[data analysis and machine learning] aspects of the class.
+- Organize (simplified) machine learning competitions for the students (based on the Kaggle framework).
+- Find real world projects for the students from local companies (award for the students?).
+- ...
 
+.pull-left[
+.hi-purple[Thank you very much for your attention!]
+
+
+.hi-purple[Any questions?]
+
+]
+
+.pull-right[
+```{R, out.width = "95%", echo = F}
+include_graphics("pics/thanks.png")
+```
+
+]

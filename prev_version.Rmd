@@ -1,0 +1,351 @@
+---
+title: "An interactive ecosystem for learning programming"
+author: "Stéphane Guerrier"
+date: " "
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false
+    self_contained: true
+---
+
+
+```{R, setup, include = F}
+# devtools::install_github("dill/emoGG")
+library(pacman)
+p_load(
+  broom, tidyverse,
+  latex2exp, ggplot2, ggthemes, ggforce, viridis, extrafont, gridExtra,
+  kableExtra, snakecase, janitor,
+  data.table, dplyr, estimatr,
+  lubridate, knitr, parallel,
+  lfe,
+  here, magrittr
+)
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+orange <- "#FFA500"
+red <- "#fb6107"
+blue <- "#2b59c3"
+green <- "#8bb174"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+purple <- "#6A5ACD"
+slate <- "#314f4f"
+# Dark slate grey: #314f4f
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+options(crayon.enabled = F)
+options(knitr.table.format = "html")
+# A blank theme for ggplot
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -0.5, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_simple <- theme_bw() + theme(
+  line = element_blank(),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text.x = element_text(size = 18, family = "STIXGeneral"),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  # plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_math <- theme_void() + theme(
+  text = element_text(family = "MathJax_Math"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_serif <- theme_void() + theme(
+  text = element_text(family = "MathJax_Main"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes <- theme_void() + theme(
+  text = element_text(family = "Fira Sans Book"),
+  axis.title = element_text(size = 18),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = grey_light,
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_set(theme_gray(base_size = 20))
+# Column names for regression results
+reg_columns <- c("Term", "Est.", "S.E.", "t stat.", "p-Value")
+# Function for formatting p values
+format_pvi <- function(pv) {
+  return(ifelse(
+    pv < 0.0001,
+    "<0.0001",
+    round(pv, 4) %>% format(scientific = F)
+  ))
+}
+format_pv <- function(pvs) lapply(X = pvs, FUN = format_pvi) %>% unlist()
+# Tidy regression results table
+tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", highlight_bold = T, digits = c(NA, 3, 3, 2, 5), title = NULL) {
+  x %>%
+    tidy() %>%
+    select(1:5) %>%
+    mutate(
+      term = terms,
+      p.value = p.value %>% format_pv()
+    ) %>%
+    kable(
+      col.names = reg_columns,
+      escape = F,
+      digits = digits,
+      caption = title
+    ) %>%
+    kable_styling(font_size = 20) %>%
+    row_spec(1:nrow(tidy(x)), background = "white") %>%
+    row_spec(highlight_row, bold = highlight_bold, color = highlight_color)
+}
+```
+
+```{css, echo = F, eval = F}
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+```{r xaringan-tile-view, echo=FALSE}
+xaringanExtra::use_tile_view()
+xaringanExtra::use_panelset()
+xaringanExtra::use_clipboard()
+xaringanExtra::use_extra_styles()
+```
+
+
+class: title-slide  
+<div class="my-logo-right"></div>
+<br>
+<br>
+<br>
+<br>
+ 
+# Introduction to Data Science
+
+## An interactive ecosystem for learning programming
+
+### .smaller[Stéphane Guerrier, Data Analytics Lab, University of Geneva]
+### .smaller[Yuming Zhang, Data Analytics Lab, University of Geneva]
+### .smaller[Lionel Voirol, Data Analytics Lab, University of Geneva]
+
+<br>
+```{R, out.width = "25%", echo = F, eval=F}
+include_graphics("pics/liscence.png")
+```
+
+
+---
+
+# Website - lecture slides
+
+Slides with interactive content and `r` code used during the lectures. For example:
+
+.center[![](join2.gif)]
+
+---
+
+# Website - interactive exercises
+
+The students can write `r` code directly on the course website and evaluate their understanding. For example:
+
+.center[![](sigmoid.gif)]
+
+---
+
+# Website - interactive exercises
+
+There are also simple multiple choice questions. For example:
+
+.center[![](sigmoid.gif)]
+
+---
+
+
+Last year, the course 
+
+OBJECTIVE
+
+
+---
+
+# The course and its objectives
+
+list of ressources
+
+
+---
+
+# The course and its objectives
+
+show book + video 
+
+
+---
+
+# The course and its objectives
+
+show website slides
+
+
+---
+
+# The course and its objectives
+
+show interactive exo
+
+---
+
+# The course and its objectives
+
+show example of work of students
+
+---
+
+# The course and its objectives
+
+for next year...
+
+- + machinenlearning
+- forecasting competition
+- award from a private company
+
+---
+
+# Ressources (1)
+
+The course is built around various resources:
+
+- An interactive ebook that cover the material discussed during the class.
+
+<div align="center">
+<iframe id="xaringan_ex"
+    title="xarigan slideshows example"
+    width="900"
+    height="400"
+    src="https://smac-group.github.io/ds/">
+</iframe>
+</div>
+
+
+---
+# Ressources (2)
+
+Educational video capsules
+
+<div align="center">
+<iframe width="700" height="415" src="https://www.youtube.com/embed/0zlWcHDKCFw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+.center[.smallest[Video made by Justin Lee]]
+
+---
+# Ressources (3)
+
+A website that proposes interactive programming exercises and quizz
+
+<div align="center">
+<iframe id="hike_inc"
+    title="hike_inc"
+    width="900"
+    height="440"
+    src="https://intro-to-ds.netlify.app/">
+</iframe>
+</div>
+
+---
+# Ressources (4)
+
+Educational web applications
+
+<div align="center">
+<iframe id="hike_inc"
+    title="hike_inc"
+    width="900"
+    height="440"
+    src="https://dal-unige.shinyapps.io/rmd_app/">
+</iframe>
+</div>
+
+
+---
+# Automatic customized mass mailing
+
+This is an example of a homework where students were required to create 
+
+<div align="center">
+<iframe id="hike_inc"
+    title="hike_inc"
+    width="900"
+    height="440"
+    src="pics/example_email_knife.html">
+</iframe>
+</div>
+
+
+---
+# Example of final project
+
+For their final project, the students ...
+
+<div align="center">
+<iframe id="hike_inc"
+    title="hike_inc"
+    width="900"
+    height="440"
+    src="https://data-analytics-lab.shinyapps.io/hike_inc/">
+</iframe>
+</div>
+
